@@ -1,6 +1,6 @@
 ---
 name: hermes-skill-review
-description: SKILL 生成后/发布前加载，按构成规范与打包分发清单审查。
+description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
 version: 1.4.0
 author: Hermes Agent
 license: MIT
