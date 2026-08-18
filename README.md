@@ -73,7 +73,7 @@ agent-skill-review-skill/
 
 ## 设计理念
 
-- **审查依据唯一**：A 构成审查对齐构成规范（生成侧），B-2 发布分发对齐发布清单（发布侧），不重复维护清单
+- **审查依据唯一**：A 构成审查对齐构成规范（生成侧），B-2 发布分发内嵌自包含清单（发布侧）
 - **结论来自核对**：yaml.safe_load / 引用校验 / py_compile / 敏感扫描，实际跑过才算数
 - **复杂 skill 委托**：delegate_task 派子 agent 并行审查 + AI 复核汇总（final summary 截断 → 从 live_transcripts 日志重建）
 - **AI 使用哲学**：用户指挥 AI，AI 替用户执行——审查结论必须可复现

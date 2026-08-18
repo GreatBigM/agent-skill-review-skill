@@ -1,7 +1,7 @@
 ---
 name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.5.0
+version: 1.6.0
 author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
@@ -73,10 +73,17 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 19. [ ] 重构/收敛后逐个检查**所有**被重写文件（README/install.sh/SKILL.md）拼接残留——同一坑命中多文件
 20. [ ] 双远端协议：`git remote -v` 确认 gitee 是 `git@gitee.com:`（SSH）——HTTPS 无凭证 push 报 Username fatal
 
-### B-2 发布分发（引用 agent-skill-distribution）
+### B-2 发布分发（自包含清单）
 
-- 加载 `agent-skill-distribution` 按「发布清单」核对：自包含/反引号引用/布局/AI 哲学头节/README/敏感扫描/邮箱/建仓/install.sh 实测/模拟协作者
-- **不重复维护清单**——发布侧细节以 distribution 为准，本技能只编排
+1. [ ] **自包含**：不依赖不存在的其他 skill（相关段引用须指向真实存在的技能，否则删除/内嵌）
+2. [ ] 反引号引用：SKILL.md 引用全部支持文件（scripts/templates/references）
+3. [ ] 布局：SKILL.md + 支持目录 + install.sh + README + CHANGELOG 齐全
+4. [ ] AI 哲学头节：顶部「用户指挥 AI，AI 替用户执行」+ 铁律
+5. [ ] README：安装方式齐全（一键脚本 + 手动复制 + 多 agent 目标含 ZCode）
+6. [ ] 敏感扫描：无内部邮箱/IP/昵称/公司痕迹
+7. [ ] 建仓：gitee 主推 + GitHub 镜像，双远端协议（SSH）
+8. [ ] install.sh 实测：隔离 HOME 跑通 + 幂等 + 版本对比 + 备份
+9. [ ] 模拟协作者：换目录/换机器装一遍验证
 
 ## 审查执行方式
 
