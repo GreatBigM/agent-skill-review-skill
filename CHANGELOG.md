@@ -2,6 +2,13 @@
 
 本文件记录版本历史。版本号定义在 SKILL.md frontmatter 的 `version` 字段（单一真相源）。
 
+## 1.5.0 (2026-08-18)
+
+### Changed（多 agent 化 + 更名）
+- **技能更名 `hermes-skill-review` → `agent-skill-review`**：SKILL.md name / 仓库名 / 目录名 / README / install.sh 全面同步（`SKILL_NAME=agent-skill-review`，安装到 `<agent>/skills/agent-skill-review`）
+- **不再特指 Hermes**：frontmatter `metadata.hermes` → `metadata.agent`；author 改为 GreatBigM；正文「hermes skills install」泛化为「部分 agent 的 skills install」；配套引用更新为 agent-skill-gen / agent-skill-distribution
+- **ZCode 安装目标**：install.sh 支持 ZCode（探测 `~/.zcode` → 安装到 `~/.zcode/skills/agent-skill-review`），README 补 `--target zcode` 示例
+
 ## 1.4.0 (2026-08-03)
 
 ### Changed（SKILL 设计三原则 + 首次对外发布快照）

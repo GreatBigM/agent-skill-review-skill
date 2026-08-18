@@ -1,17 +1,17 @@
 ---
-name: hermes-skill-review
+name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.4.0
-author: Hermes Agent
+version: 1.5.0
+author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
 metadata:
-  hermes:
-    tags: [hermes, skills, review, audit]
+  agent:
+    tags: [agent, skills, review, audit]
     triggers: [审查skill, skill审核, 二次审核, skill review]
 ---
 
-# SKILL 审查（hermes-skill-review）
+# SKILL 审查（agent-skill-review）
 
 ## ⚡ 使用方式（AI 替你完成）
 
@@ -32,10 +32,10 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 
 | 时机 | 对象 | 清单 |
 |------|------|------|
-| 生成后 | 构成（对齐 hermes-skill-gen 规范） | A 构成审查 |
+| 生成后 | 构成（对齐 agent-skill-gen 规范） | A 构成审查 |
 | 发布前 | 打包整理 + 发布分发 | B 发布前审查 |
 
-## A 构成审查（对齐 hermes-skill-gen 规范）
+## A 构成审查（对齐 agent-skill-gen 规范）
 
 1. **概念分层**：三件事三个文件（怎么做/做成什么样/发生过什么），不混装
 2. **文件层级**：SKILL.md/CHANGELOG/templates/references/scripts 齐全且定位正确
@@ -69,13 +69,13 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 15. [ ] 脚本验证：py_compile 全过 + `__pycache__/` 无 .pyc 入暂存（.gitignore 须含）
 16. [ ] 真实引用 vs 描述性文字区分：正则扫出的 `references/design` 可能是说明性短语——逐个 `os.path.exists` 确认，描述性文字不报缺失
 17. [ ] 版本化三件套：version 字段 + CHANGELOG.md + install.sh 安装/更新一体（版本对比 + 备份 + 拷贝 CHANGELOG）
-18. [ ] push 后同步本机安装：`~/.hermes/skills/` 是复制品无 .git，push 不自动同步
+18. [ ] push 后同步本机安装：`~/.hermes/skills/` 等本机 skills 目录是复制品无 .git，push 不自动同步
 19. [ ] 重构/收敛后逐个检查**所有**被重写文件（README/install.sh/SKILL.md）拼接残留——同一坑命中多文件
 20. [ ] 双远端协议：`git remote -v` 确认 gitee 是 `git@gitee.com:`（SSH）——HTTPS 无凭证 push 报 Username fatal
 
-### B-2 发布分发（引用 hermes-skill-distribution）
+### B-2 发布分发（引用 agent-skill-distribution）
 
-- 加载 `hermes-skill-distribution` 按「发布清单」核对：自包含/反引号引用/布局/AI 哲学头节/README/敏感扫描/邮箱/建仓/install.sh 实测/模拟协作者
+- 加载 `agent-skill-distribution` 按「发布清单」核对：自包含/反引号引用/布局/AI 哲学头节/README/敏感扫描/邮箱/建仓/install.sh 实测/模拟协作者
 - **不重复维护清单**——发布侧细节以 distribution 为准，本技能只编排
 
 ## 审查执行方式
@@ -89,6 +89,6 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 
 ## 相关
 
-- `hermes-skill-gen` — 生成环节（构成规范 + 打包整理规范，审查依据）
+- `agent-skill-gen` — 生成环节（构成规范 + 打包整理规范，审查依据）
 
 > 框架：生成 → 审查（本技能）→ 发布（三环节技能各自独立分发，按需获取）
