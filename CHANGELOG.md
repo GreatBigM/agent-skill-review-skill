@@ -2,6 +2,13 @@
 
 本文件记录版本历史。版本号定义在 SKILL.md frontmatter 的 `version` 字段（单一真相源）。
 
+## 1.6.2 (2026-10-14)
+
+### Added（发布前审查）
+
+- **B-1 补第 21 项：改动落点在发布仓，不在安装副本**——实锤一次：改了 `~/.claude/skills/qwiki`（install.sh 的复制品，无 .git）就以为改完了，发布仓一个字没动，直到下一轮复核才被指出；那份手改件唯一的下场是"下次 install.sh 把它备份进 skills-backup、换上远端旧版"。该项给出动手前的落点确认（`git -C ~/agent-skill-repos/<name>-skill rev-parse --short HEAD`）+ 收口四步（回灌发布仓 → 推双远端 → `install.sh --target=…` 重装两处副本 → `diff -rq`/`md5sum` 对账）；既有第 18 项（push 后同步本机安装）是同一件事的推送后一半。README 的"B-1 20 项"同步改 21
+- **补记 1.6.1（当时改了实现没写条目）**：install.sh 支持 pi 目标（`~/.pi/agent/skills` 探测 + `--target pi`）。同一形状（改了实现忘了记录）在 qwiki-skill 已复发六次并因此加了机器闸门；本仓暂无闸门，先靠条目补记留痕
+
 ## 1.6.0 (2026-08-18)
 
 ### Fixed（发布审查清单自包含化）

@@ -1,7 +1,7 @@
 ---
 name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.6.1
+version: 1.6.2
 author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
@@ -72,6 +72,7 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 18. [ ] push 后同步本机安装：`~/.hermes/skills/` 等本机 skills 目录是复制品无 .git，push 不自动同步
 19. [ ] 重构/收敛后逐个检查**所有**被重写文件（README/install.sh/SKILL.md）拼接残留——同一坑命中多文件
 20. [ ] 双远端协议：`git remote -v` 确认 gitee 是 `git@gitee.com:`（SSH）——HTTPS 无凭证 push 报 Username fatal
+21. [ ] **改动落点在发布仓，不在安装副本**（2026-10-14 实锤）：`~/.claude/skills/<name>` 与 `~/.hermes/skills/<name>` 都是 install.sh 装的**复制品（无 .git）**——改了副本 = 没发布，且下次 install.sh 会把它备份走、换上远端旧版。动手前先 `git -C ~/agent-skill-repos/<name>-skill rev-parse --short HEAD` 确认落点；收口四步：**回灌发布仓 → 推双远端 → `install.sh --target=…` 重装两处副本 → `diff -rq` / `md5sum` 对账**（第 18 项是同一件事的推送后一半）
 
 ### B-2 发布分发（自包含清单）
 
