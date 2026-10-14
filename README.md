@@ -71,6 +71,7 @@ agent-skill-review-skill/
 ├── install.sh                       ← 一键安装脚本
 ├── SKILL.md                         ← 操作手册（触发条件/双时机清单/执行方式，仓库根即 skill）
 ├── references/                      ← 支持文件（SKILL.md B-4 引用的闸门对抗测试配方）
+├── scripts/                       ← 发布闸门（脱敏 + CHANGELOG 同步，**不随安装下发**）
 └── CHANGELOG.md                     ← 版本历史
 ```
 
