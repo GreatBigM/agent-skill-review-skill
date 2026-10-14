@@ -32,10 +32,11 @@ curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install
 # 1. 克隆本仓库
 git clone https://gitee.com/GreatBigM/agent-skill-review-skill.git
 
-# 2. 复制到对应 agent 的 skills 目录（不经过安全扫描）
+# 2. 复制到对应 agent 的 skills 目录（不经过安全扫描）——SKILL.md 引用的 references/ 要一起拷
 mkdir -p ~/.hermes/skills/agent-skill-review
-cp agent-skill-review-skill/SKILL.md ~/.hermes/skills/agent-skill-review/
-# ZCode: cp -r 到 ~/.zcode/skills/agent-skill-review/
+cp agent-skill-review-skill/SKILL.md agent-skill-review-skill/CHANGELOG.md ~/.hermes/skills/agent-skill-review/
+cp -r agent-skill-review-skill/references ~/.hermes/skills/agent-skill-review/
+# ZCode: 同上，目标换 ~/.zcode/skills/agent-skill-review/
 
 # 3. 会话内 /reload-skills，或新开会话自动加载
 ```
@@ -57,7 +58,7 @@ cp agent-skill-review-skill/SKILL.md ~/.hermes/skills/agent-skill-review/
 | 时机 | 对象 | 清单 |
 |------|------|------|
 | 生成后 | 构成（对齐构成规范） | A 构成审查（10 项：概念分层/文件层级/单一真相源/命名/模板定位/版本化/参考分层） |
-| 发布前 | 打包整理 + 发布分发 | B 发布前审查（B-1 打包整理 21 项 + B-2 发布分发清单） |
+| 发布前 | 打包整理 + 发布分发 + 复审 | B 发布前审查（B-1 打包整理 25 项 + B-2 发布分发清单 + B-3 复审 + B-4 新加闸门的对抗测试） |
 
 **报告格式**：按严重程度排序——P0（阻断）/ P1（必改）/ P2（建议），每条带问题 + 证据（文件/行号）+ 修复建议。
 
@@ -68,6 +69,7 @@ agent-skill-review-skill/
 ├── README.md                        ← 本文件
 ├── install.sh                       ← 一键安装脚本
 ├── SKILL.md                         ← 操作手册（触发条件/双时机清单/执行方式，仓库根即 skill）
+├── references/                      ← 支持文件（SKILL.md B-4 引用的闸门对抗测试配方）
 └── CHANGELOG.md                     ← 版本历史
 ```
 

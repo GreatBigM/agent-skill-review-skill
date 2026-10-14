@@ -10,7 +10,7 @@ set -euo pipefail
 
 REPO_URL="https://gitee.com/GreatBigM/agent-skill-review-skill.git"
 SKILL_NAME="agent-skill-review"
-COPY_DIRS=""   # 除 SKILL.md/CHANGELOG.md 外需拷贝的目录（本 skill 无支持目录）
+COPY_DIRS="references"   # 除 SKILL.md/CHANGELOG.md 外需拷贝的目录（SKILL.md 正文引用的对抗测试配方在此，漏配 = 装出来的技能缺支持文件）
 
 get_version() { grep -m1 '^version:' "$1" 2>/dev/null | sed 's/^version:[[:space:]]*//' | tr -d '"'\'' ' || true; }
 version_gt() { [ "$1" != "$2" ] && [ -n "$2" ] && [ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -1)" = "$2" ]; }
