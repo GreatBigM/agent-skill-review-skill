@@ -1,4 +1,11 @@
 # Changelog
+## 1.11.2 (2026-10-14)
+
+### Added（发布闸门）
+
+- **挂上 pre-push 闸门（脱敏 + CHANGELOG 同步）**：`scripts/publish-check.py`（扫项目代号 / 内网 IP / MAC / 长 hash / 凭据 / 本机路径，自带 `--self-test`）+ `scripts/hooks/pre-push`；启用一次 `git config core.hooksPath scripts/hooks`。理由与脱敏规则同源：**靠人记必然回潮**，检查要做成"推送时自动拦"而不是"记得手动跑"。CHANGELOG 闸门名单 = SKILL.md / install.sh / scripts/ / references/。
+- install.sh 的两处修法（`--target` 空格形式 / 备份落扫描根外）已在 1.6.3 发布，本版不再重复。
+- 版本 1.11.1 → 1.11.2
 
 本文件记录版本历史。版本号定义在 SKILL.md frontmatter 的 `version` 字段（单一真相源）。
 
