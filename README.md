@@ -20,7 +20,7 @@ curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install
 ```
 
 > 脚本等价于手动复制（clone + cp），不经过安全扫描，可先审阅脚本内容再执行。
-> 已安装时自动备份旧版本到 `<skill_dir>.bak.<时间戳>`，重跑即升级（含版本对比提示）。
+> 已安装时自动备份旧版本到 `<tool 根>/skills-backup/<skill>.bak.<时间戳>`（**扫描根之外**——备份留在 skills/ 内会被当成第二个同名技能加载），重跑即升级（含版本对比提示）。
 
 ## 安装（备选：手动复制）
 

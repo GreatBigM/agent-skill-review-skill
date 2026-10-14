@@ -1,7 +1,7 @@
 ---
 name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.6.2
+version: 1.6.3
 author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
