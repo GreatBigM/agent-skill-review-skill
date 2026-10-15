@@ -6,14 +6,14 @@ SKILL 生成后或发布前加载本技能，AI 按时机选择审查清单，�
 
 ## 安装
 
-本 skill 支持多 agent 目标：Hermes / Claude Code / Codex / ZCode。安装脚本自动探测本机已安装的 agent，让用户选择安装目标。
+本 skill 支持多 agent 目标：Hermes / Claude Code / Codex / ZCode / pi。安装脚本自动探测本机已安装的 agent，让用户选择安装目标。
 
 ```bash
 # 方式 1：交互选择安装目标（推荐，先下载再执行以保留交互）
 curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install.sh -o /tmp/install.sh && bash /tmp/install.sh
 
 # 方式 2：指定目标（非交互，含 ZCode）
-curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install.sh | bash -s -- --target hermes,claude,zcode
+curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install.sh | bash -s -- --target hermes,claude,zcode,pi
 
 # 方式 3：安装到全部检测到的 agent
 curl -fsSL https://gitee.com/GreatBigM/agent-skill-review-skill/raw/main/install.sh | bash -s -- --all
@@ -37,7 +37,7 @@ git clone https://gitee.com/GreatBigM/agent-skill-review-skill.git
 mkdir -p ~/.hermes/skills/agent-skill-review
 cp agent-skill-review-skill/SKILL.md agent-skill-review-skill/CHANGELOG.md ~/.hermes/skills/agent-skill-review/
 cp -r agent-skill-review-skill/references ~/.hermes/skills/agent-skill-review/
-# ZCode: 同上，目标换 ~/.zcode/skills/agent-skill-review/
+# ZCode / pi: 同上，目标换 ~/.zcode/skills/agent-skill-review/ 或 ~/.pi/agent/skills/agent-skill-review/
 
 # 3. 会话内 /reload-skills，或新开会话自动加载
 ```
