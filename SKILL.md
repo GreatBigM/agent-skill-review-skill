@@ -1,7 +1,7 @@
 ---
 name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.12.0
+version: 1.12.1
 author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
@@ -115,7 +115,7 @@ python3 <agent-skill-gen>/scripts/skill-lint.py <skill 目录>   # 有 gen 时�
 7. [ ] 建仓：gitee 主推 + GitHub 镜像，双远端协议（SSH）
 8. [ ] install.sh 实测：隔离 HOME 跑通 + 幂等 + 版本对比 + 备份
 9. [ ] 模拟协作者：换目录/换机器装一遍验证
-10. [ ] **出库后回读核验（别把 push 的 rc 当证据）**：`git fetch --all` 后比对本地 / gitee / GitHub **三端 HEAD 一致**；再用托管平台 API 取**线上文件正文**比哈希（`/api/v5/repos/<owner>/<repo>/contents/<path>?ref=<branch>` → base64 解码）——**`raw` 端点返回的不是文件正文**（反爬：md5 对不上、grep 不到内容），回读一律走 API。最后 `sync-audit.py --sync` 更新本机副本、重跑审计确认「全部一致」（先 push 再装）
+10. [ ] **出库后回读核验（别把 push 的 rc 当证据）**：`git fetch --all` 后比对本地 / gitee / GitHub **三端 HEAD 一致**；再用托管平台 API 取**线上文件正文**比哈希（`/api/v5/repos/<owner>/<repo>/contents/<path>?ref=<branch>` → base64 解码）——**`raw` 端点返回的不是文件正文**（反爬：md5 对不上、grep 不到内容），回读一律走 API。最后 `sync-audit.py --sync` 更新本机副本、重跑审计确认「全部一致」（先 push 再装）。**一行替代**：`python3 <agent-skill-gen>/scripts/skill-lint.py --verify-install <skill 仓>` —— 真 clone 云端 + 隔离 HOME 真装一遍，比对出库面全量文件（本地 / 云端 / 安装结果三份）
 
 ### B-3 复审（作者按上一轮结论改完后再审）
 
