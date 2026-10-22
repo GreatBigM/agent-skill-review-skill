@@ -1,7 +1,7 @@
 ---
 name: agent-skill-review
 description: skill 审查：构成审查 + 发布前审查双清单，发布前必读。
-version: 1.11.6
+version: 1.12.0
 author: GreatBigM
 license: MIT
 category: autonomous-ai-agents
@@ -17,7 +17,7 @@ metadata:
 
 ```
 用户: 审查下这个 skill / 二次审核
-AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打包分发审查）→ 逐项核对 → 报告问题清单（P0/P1/P2）→ 修复确认
+AI:  加载本 skill → 跑 `skill-lint.py` 机检 → 识别时机（生成后=构成审查 / 发布前=打包分发审查）→ 逐项核对（只核机检覆盖不到的）→ 报告问题清单（P0/P1/P2）→ 修复确认
 ```
 
 **铁律：审查结论必须来自实际核对（读文件/跑校验），不凭印象下结论。**
@@ -35,20 +35,46 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 | 生成后 | 构成（对齐 agent-skill-gen 规范） | A 构成审查 |
 | 发布前 | 打包整理 + 发布分发 | B 发布前审查 |
 
-## A 构成审查（对齐 agent-skill-gen 规范）
+## A 构成审查（对齐 agent-skill-gen R-01~R-13）
 
-1. **概念分层**：三件事三个文件（怎么做/做成什么样/发生过什么），不混装
-2. **文件层级**：SKILL.md/CHANGELOG/templates/references/scripts 齐全且定位正确
-3. **概念单一真相源**：无两处定义，无"定位分歧文件"（既非 X 也非 Y 的夹层文件——该删）
-4. **目标态唯一真相源在 skill 侧**：宪法/蓝图（`SCHEMA.md`）与 SKILL.md 概念平级、物理并列于 skill 根目录，随 skill 分发，资产内不放置实例/copy；skill 不得与被管理资产重复定义「做成什么样」（细则见第 9 条）
-5. **命名合规**：name 动词-名词；选词无占用冲突
-6. **AI 使用哲学头节**：顶部声明「用户指挥 AI，AI 替用户执行」
-7. **模板定位**：无死模板（基板），继承靠内嵌+引用；init 模板进了 init 流程
-8. **版本化**：version 单一真相源 + CHANGELOG 就位
-9. **概念平级 → 物理平级 + 单一真相源**：SKILL.md 声明平级的文档（宪法/蓝图）在物理上并列（根目录）；templates/ 内文件须过可替换性检验——不可替换的约定/宪法内容 → P1 移出至根目录；**资产内发现宪法实例/copy → P1 删除**（唯一真相源在 skill，qwiki v2.0.0 教训）
-10. **参考分层（A 模式）**：SKILL.md 不承载坑/决策原因（全量在 references/，定位标清：排障/理解/接入）；违反 → P1。**豁免**：清单型 skill 的清单条目本身即判据，正文保留「判据 + 一句话修法」不算承载坑；实测细节 / 事故回溯 / 口径推导仍进 references/
+**先跑机器闸门，再做人判。** 机检输出原样贴进报告（FAIL/WARN 计数 + 明细），人判只覆盖机检给不出结论的部分。
+
+### A-0 机器闸门（R-01~R-08 / R-11）
+
+```bash
+python3 <agent-skill-gen>/scripts/skill-lint.py <skill 目录>   # 有 gen 时直接跑
+```
+
+未装 gen 时按右列命令人工取证，判据同左列规则：
+
+| 规则 | 机检覆盖 | 人工取证（无 gen 时） |
+|---|---|---|
+| R-01 SKILL.md 唯一入口 | 是 | `ls <skill>/SKILL.md` |
+| R-02 支持文件全引用、无幽灵引用 | 是 | 反引号路径逐个 `os.path.exists` + 反向覆盖 templates/references/scripts |
+| R-03 支持文件清单在末尾 | 是 | 末两个二级标题里找 `## 支持文件清单` |
+| R-04 frontmatter 三必填 + triggers | 是 | `yaml.safe_load(frontmatter)` |
+| R-05 发现层只有一层 | 是 | `find <skills_dir> -mindepth 2 -name SKILL.md` |
+| R-07 description ≤100 字 | 是 | `len(description)` |
+| R-08 version 单一真相源 | 是 | frontmatter vs `CHANGELOG.md` 首条 |
+| R-11 脚本可编译 | 是 | `python3 -m py_compile scripts/*.py` |
+| R-14 分发完整性（install.sh 覆盖） | 是 | 读 `install.sh` 的 `COPY_DIRS`/`COPY_SCRIPTS`，逐目录对照 |
+
+**机检边界**：它只判「可机器判定的形状」——文件在不在、引用通不通、版本同不同、能不能编译。**判不了内容对不对**（坑该不该在内、概念是否重复、篇幅是否失控），那些在 A 人判。
+
+**FAIL 一律 P0**（闸门红着不该发出去）；**WARN 逐条判**「有意为之 / 该修」，判「有意为之」的写进报告并给理由，**不静默放过**。
+
+### A 人判（机检给不出结论）
+
+- **A-1 R-06 概念平级 → 物理平级**：SKILL.md 声明平级的宪法/蓝图（`SCHEMA.md`）必须在根目录；`templates/` 内出现不可替换的约定 → P1 移出；资产内发现宪法实例/copy → P1 删除（唯一真相源在 skill，qwiki v2.0.0 教训）
+- **A-2 R-09 A 模式**：坑 / 决策原因 / 事故回溯是否全在 `references/`。**豁免**：清单型 skill 的清单条目本身即判据，正文保留「判据 + 一句话修法」不算承载坑；实测细节 / 事故回溯 / 口径推导仍进 references
+- **A-3 R-10 一个概念一个文件定义**：机检只抓同名章节；人判查「同一概念换词写两遍」（SKILL.md ↔ README ↔ `templates/`）
+- **A-4 R-12 篇幅**：单节超过约 30 行时判性质——是操作（留，操作详述是 SKILL.md 本职）还是坑（移 `references/`）
+- **A-5 R-13 受体矩阵**：依赖宿主特性（hook / 扩展 / 常驻进程）的技能，是否写明各受体能力与降级路径
+- **A-6 命名语义**：name 动词-名词、选词无占用（R-04 只机检格式，语义靠人）
 
 ## B 发布前审查
+
+> **条目编号只追加、不重排**（`B-1 #11`）。新增条目续号，删条目留空号并在 CHANGELOG 记原因——引用才不会指向别处。
 
 ### B-1 打包整理（2026-08-01 实践沉淀，原 packaging 清单并入）
 
@@ -60,13 +86,13 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 6. [ ] 脚本名无项目名/内部痕迹
 7. [ ] 内部 skill 名引用已清（指向不存在的技能 = 死链）
 8. [ ] install.sh 支持多技能数组 + 单技能参数（管道 `| bash -s -- <skill>` 验证）
-9. [ ] frontmatter 纯 YAML：`yaml.safe_load` 必须通过——正文不能插在 `---` 之间（2026-08-01 二次审计：TL;DR 插在 description 和 category 之间解析报错）
-10. [ ] 幽灵脚本引用检查：SKILL.md 中 `scripts/` 引用的文件名与实际文件一一匹配
-11. [ ] 全量脚本引用：`_referenced_support_paths` 提取无缺失（SKILL.md 末尾「支持文件清单」段用反引号列出所有 scripts/*.py）
+9. [机检 R-04] frontmatter 纯 YAML：`yaml.safe_load` 必须通过——正文不能插在 `---` 之间（2026-08-01 二次审计：TL;DR 插在 description 和 category 之间解析报错）
+10. [机检 R-02] 幽灵脚本引用：SKILL.md 引用的支持文件必须真实存在（由 `skill-lint.py` 判，人不重复核）
+11. [机检 R-02/R-03] 支持文件覆盖与清单完整：`python3 <agent-skill-gen>/scripts/skill-lint.py <skill>` 判「全部被引用 + 清单列出 + 清单在末尾」
 12. [ ] 二次审计委托技巧：delegate_task final summary 有长度限制（~475 chars 截断），完整结论从 live_transcripts 日志重建——日志是真实信息源
 13. [ ] README 无重构残留：标题全文中只出现一次，wc -l + 中部抽查
 14. [ ] 脱敏后全仓重扫：同款标识符（U-Boot 提示符/进程名/日志路径）三处分布——SKILL.md 模式表/脚本 MARKERS/references 代码示例；**新增内容同样在扫描面内**：CHANGELOG 条目里引用真实路径 / 代号会命中 ⇒ `pre-push` 直接拒推（写发布件正文时就把真实名换占位符，别等推送前才发现）；**样本写在闸门之外的脚本**里才会命中——闸门脚本自身在 `SKIP_FILES` 内、不在扫描面（见本项末「唯一例外」），改它时人工核对。闸门口径（2026-10-15 收紧，权威表述见闸门脚本文件头）：大小写不敏感（同一代号的大写 / 小写写法同等命中）/ 白名单按**匹配项**豁免（一行里出现 `<项目A>` 不给同行的真名背书，旧版整行豁免已废）/ 词边界用显式字符类、不用 `\b`（str 模式下 `\w` 含汉字 ⇒ 代号紧贴汉字即漏检）/ 人名、厂商 SDK 名这类无法正则枚举者走本机未跟踪的私用名单文件（每行一个真名，闸门自动一并扫）。**唯一例外 = 闸门脚本自身**（在 `SKIP_FILES` 内、不在扫描面）⇒ 改它时人工核对
-15. [ ] 脚本验证：py_compile 全过 + `__pycache__/` 无 .pyc 入暂存——**先确认 `.gitignore` 存在**（仓里可能根本没有，顺手补 `__pycache__/` `*.pyc`），暂存用显式 `git add <改动文件>` 而非 `git add -A`；清理产物靠 .gitignore 忽略，不要 `rm -rf` 清目录（破坏性命令会触发审批门，可能中途阻断本轮）
+15. [机检 R-11 部分] 脚本验证：py_compile 全过（lint 判）+ `__pycache__/` 无 .pyc 入暂存——**先确认 `.gitignore` 存在**（仓里可能根本没有，顺手补 `__pycache__/` `*.pyc`），暂存用显式 `git add <改动文件>` 而非 `git add -A`；清理产物靠 .gitignore 忽略，不要 `rm -rf` 清目录（破坏性命令会触发审批门，可能中途阻断本轮）
 16. [ ] 真实引用 vs 描述性文字区分：正则扫出的 `references/design` 可能是说明性短语——逐个 `os.path.exists` 确认，描述性文字不报缺失
 17. [ ] 版本化三件套：version 字段 + CHANGELOG.md + install.sh 安装/更新一体（版本对比 + 备份 + 拷贝 CHANGELOG）
 18. [ ] push 后同步本机安装：`~/.hermes/skills/` 等本机 skills 目录是复制品无 .git，push 不自动同步；**顺序必须「先 push 再装」**——一键脚本从**远端** clone，未推送时重跑会把本机副本**降级**回远端版本（实测：本地高于远端时脚本提示「开发版，覆盖安装」但仍照旧覆盖，有备份、不阻断）；若必须先本机生效，就按脚本的备份约定手拷，备份落 `<tool 根>/skills-backup/`（扫描根之外）
@@ -141,7 +167,8 @@ AI:  加载本 skill → 识别时机（生成后=构成审查 / 发布前=打�
 
 ## 审查执行方式
 
-- 简单 skill（≤3 文件）：AI 直接逐项核对（yaml.safe_load / _referenced_support_paths / py_compile / 敏感扫描）
+- **第一步固定是机检**：跑 `skill-lint.py` 并把输出贴进报告（FAIL / WARN 计数 + 明细），再进人判与 B 段；别用人工核对去复现机器能判的东西
+- 简单 skill（≤3 文件）：机检 + AI 逐项核对（敏感扫描 / 语义命名 / A 人判六条）
 - 复杂 skill：`delegate_task` 派子 agent 并行审查 + AI 复核汇总（final summary 截断 → 从 live_transcripts 日志重建）
 - **作业单与验收条件（修复轮批子代理之前定好，否则 fixer 必空转或收不住）**：① 验收条件**别写「全仓 grep 0 命中」**——闸门脚本自身必含掩码/合成样本、本机私用名单必含真名 ⇒ 字面不可达，写成「**随安装下发的发布件正文 0 命中**（排除闸门脚本与本机名单）」并同时给机器验收 `publish-check.py . → rc=0`；② 作业单的字面改法**可能与事实冲突**（让「改指本 skill 的 `references/X`」而该文件其实在别的仓）⇒ 写明「以验收目标为准，冲突时按目标办并在报告里说明理由」；③ **同族收敛要显式授权**（给一处硬编码阈值 / 一处旧目录名，就写明「同族一并收敛，超出作业单的改动逐条列在报告里」）；④ **未推送时要求历史收口**——清的是**每笔未推提交的树与提交信息**（提交信息进公开历史改不回来），做法与树一致性校验见 `references/publish-history-hygiene.md`
 
